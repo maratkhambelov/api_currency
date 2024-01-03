@@ -30,10 +30,11 @@ pub fn establish_connection() -> SqliteConnection {
         .unwrap_or_else(|_| panic!("Error connecting to {}", database_url))
 }
 
-pub fn create_rate(conn: &mut SqliteConnection, base_currency: &str, target_currency: &str, timestamp: &str) -> Rate {
+//TODO: delete
+pub fn create_rate(conn: &mut SqliteConnection, base_currency: &str, target_currency: &str, last_update: &str) -> Rate {
     use crate::schema::exchanges_rates;
 
-    let new_rate = NewRate { base_currency, target_currency, rate: 1f32, timestamp };
+    let new_rate = NewRate { base_currency, target_currency, rate: 1f32, last_update };
 
     diesel::insert_into(exchanges_rates::table)
         .values(&new_rate)

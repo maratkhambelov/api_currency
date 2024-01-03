@@ -4,6 +4,7 @@ use sqlite_test_v2::*;
 use reqwest::{ Client, Error};
 use serde_json::Value;
 use tokio::runtime::Runtime;
+use chrono::{Local};
 
 
 async fn fetch_rates(currency: &str) -> Result<(), Error> {
@@ -31,18 +32,21 @@ async fn fetch_rates(currency: &str) -> Result<(), Error> {
         let response: Value = serde_json::from_str(&body).unwrap();
 
 
-        let parsed_timestamp = "1704204843"; //TODO: delete
-
         let data = response["data"].as_object().unwrap();
 
         for (currency_code, rate_value) in data.iter() {
             let parsed_rate = rate_value.as_object().unwrap();
+            let current_date = Local::now();
+            let formatted_date = current_date.format("%Y-%m-%d %H:%M:%S").to_string();
+
+            println!("formatted_date {:?}", formatted_date);
+
 
             let exchange_rate = NewRate {
                 base_currency: currency,
                 target_currency: &*currency_code.to_string(),
                 rate: parsed_rate["value"].as_f64().unwrap() as f32,
-                timestamp: &*parsed_timestamp.to_string(),
+                last_update: &*formatted_date,
             };
             println!("exchange_rate {:?}", exchange_rate);
 
@@ -76,53 +80,3 @@ fn main() {
         Err(e) => eprintln!("Error: {}", e),
     }
 }
-
-// use sqlite_test_v2::*;
-// use std::io::{stdin, Read};
-//
-// fn main() {
-//     let connection = &mut establish_connection();
-//
-//     println!("What would you like your base_currency to be?");
-//     let mut base_currency = String::new();
-//     stdin().read_line(&mut base_currency).unwrap();
-//     let base_currency = &base_currency[..(base_currency.len() - 1)]; // Drop the newline character
-//     println!("\nOk! Let's write {base_currency} (Press {EOF} when finished)\n");
-//
-//     let mut target_currency = String::new();
-//     stdin().read_to_string(&mut target_currency).unwrap();
-//
-//     let mut timestamp = String::new();
-//     stdin().read_to_string(&mut timestamp).unwrap();
-//
-//
-//     let rate = create_rate(connection, base_currency, &target_currency, &timestamp);
-//     println!("\nSaved draft {base_currency} with id {}", rate.base_currency);
-// }
-//
-// #[cfg(windows)]
-// const EOF: &str = "CTRL+Z";
-
-//use self::models::*;
-// use diesel::prelude::*;
-// use sqlite_test_v2::*;
-//
-// fn main() {
-//     use self::schema::exchanges_rates::dsl::*;
-//
-//     let connection = &mut establish_connection();
-//     let results = exchanges_rates
-//         // .filter(id.eq(1))
-//         .limit(5)
-//         .select(Rate::as_select())
-//         .load(connection)
-//         .expect("Error loading posts");
-//
-//     //.filter(published.eq(true))
-//     println!("Displaying {:?}", results[4]);
-//     // for rate in results {
-//     //     // println!("{}", rate.base_currency);
-//     //     // println!("----------\n");
-//     //     // println!("{}", rate.target_currency);
-//     // }
-// }

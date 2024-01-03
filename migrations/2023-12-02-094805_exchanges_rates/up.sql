@@ -4,7 +4,7 @@ CREATE TABLE exchanges_rates (
                                  base_currency TEXT NOT NULL,
                                  target_currency TEXT NOT NULL,
                                  rate REAL NOT NULL,
-                                 timestamp TEXT,
+                                 last_update TEXT NOT NULL,
                                  UNIQUE(base_currency, target_currency)
 )
 

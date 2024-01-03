@@ -9,16 +9,15 @@ pub struct Rate {
     pub base_currency: String,
     pub target_currency: String,
     pub rate: f32,
-    pub timestamp: Option<String>,
+    pub last_update: String,
 }
 
 
-//TODO: delete timestamp
 #[derive(Insertable, Debug)]
 #[diesel(table_name = exchanges_rates)]
 pub struct NewRate<'a> {
     pub base_currency: &'a str,
     pub target_currency: &'a str,
     pub rate: f32,
-    pub timestamp: &'a str,
+    pub last_update: &'a str,
 }

@@ -6,6 +6,6 @@ diesel::table! {
         base_currency -> Text,
         target_currency -> Text,
         rate -> Float,
-        timestamp -> Nullable<Text>,
+        last_update -> Text,
     }
 }

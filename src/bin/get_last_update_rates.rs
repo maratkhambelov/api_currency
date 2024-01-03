@@ -9,14 +9,11 @@ async fn get_last_update_rates() -> Result<(), Error> {
 
     let connection = &mut establish_connection();
     let result = exchanges_rates
-        .filter(timestamp.is_not_null())
         .limit(1)
         .select(Rate::as_select())
         .load(connection)
         .expect("Error loading currencies");
-
-
-    println!("result {:?}", result[0]);
+    println!("{:?}", result[0].last_update);
 
     Ok(())
 
