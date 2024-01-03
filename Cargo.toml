@@ -1,0 +1,19 @@
+[package]
+name = "sqlite-test-v2"
+version = "0.1.0"
+edition = "2021"
+
+# See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
+
+[dependencies]
+diesel = { version = "2.1.0", features = ["sqlite", "returning_clauses_for_sqlite_3_35"] }
+dotenvy = "0.15"
+libsqlite3-sys = { version = "0.27.0", features = ["bundled"] }
+reqwest = { version = "0.11", features = ["json"] }
+serde_json = "1.0.108"
+tokio = { version = "1", features = ["full"] }
+log = "0.4.20"
+
+[[bin]]
+name = "get_last_update_rates"
+doc = false
